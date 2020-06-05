@@ -21,7 +21,7 @@
 
 ![image](https://github.com/bilibilifmk/wifi_link_tool/blob/master/img/wxxcx.jpg)
 
-## 小程页面
+## 小程序页面
 ![image](https://github.com/bilibilifmk/wifi_link_tool/blob/master/img/wx1.jpg)
 ![image](https://github.com/bilibilifmk/wifi_link_tool/blob/master/img/wx2.jpg)  
 点击通用设备配网 即可弹出配网 如未弹出请检查文件系统是否上传成功！  
