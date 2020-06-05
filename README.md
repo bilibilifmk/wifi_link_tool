@@ -3,7 +3,7 @@
 该库免费提供 使用请注明出处 允许毕业设计使用本库 
 ## 当前版本v1.0.1 开源协议：GPL3.0
 ****
-# 配套视频：https://www.bilibili.com/video/BV1ye411x7Xr/  
+
 ![img](https://github.com/bilibilifmk/wifi_link_tool/blob/master/img/index.jpg)
 ****
 ## 普通配网流程 1.链接WiFi 2.自动弹出配网或打开浏览器访问6.6.6.6 3.输入WiFi密码   
