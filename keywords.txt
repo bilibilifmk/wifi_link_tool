@@ -1,0 +1,6 @@
+Hostname		LITERAL1	
+load	KEYWORD2
+pant	KEYWORD2
+rstb	KEYWORD2
+stateled	KEYWORD2
+wxscan	KEYWORD2
