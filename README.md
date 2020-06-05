@@ -22,7 +22,8 @@
 ![image](https://github.com/bilibilifmk/wifi_link_tool/blob/master/img/wxxcx.jpg)
 
 ## 小程序页面
-![image](https://github.com/bilibilifmk/wifi_link_tool/blob/master/img/wx1.jpg)
+![image](https://github.com/bilibilifmk/wifi_link_tool/blob/master/img/wx1.jpg)  
+
 ![image](https://github.com/bilibilifmk/wifi_link_tool/blob/master/img/wx2.jpg)  
 点击通用设备配网 即可弹出配网 如未弹出请检查文件系统是否上传成功！  
 点击设备列表可搜索局域网中可被搜索的设备
@@ -48,7 +49,7 @@
 * 打开测试demo 文件—>示例—>wifi_link_tool—>demo
 * 选择串口及波特率
 * 选择合适的flash size
-![image](https://github.com/bilibilifmk/wifi_link_tool/blob/master/img/flash.jpj)  
+![image](https://github.com/bilibilifmk/wifi_link_tool/blob/master/img/flash.jpg)  
 * 点击验证 验证库是否能正常编译
 * 检查文件系统上传工具  工具下会显示 ESP8266 sketch Data Upload 证明安装成功
 * 上传文件系统 工具 —>ESP8266 sketch Data Upload 
