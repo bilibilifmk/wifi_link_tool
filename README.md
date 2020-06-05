@@ -4,7 +4,7 @@
 ## 当前版本v1.0.1 开源协议：GPL3.0
 ****
 # 配套视频：https://www.bilibili.com/video/BV1ye411x7Xr/  
-![img](/img/index.jpg)
+![img](https://github.com/bilibilifmk/wifi_link_tool/blob/master/img/index.jpg)
 ****
 ## 普通配网流程 1.链接WiFi 2.自动弹出配网或打开浏览器访问6.6.6.6 3.输入WiFi密码   
 ## 微信小程序配网 使用微信扫描二维码 打开小程序 点击通用设备配网  输入WiFi密码
@@ -19,11 +19,11 @@
 # 微信小程序配网
 ## 使用微信扫一扫进行加载小程序
 
-![image](/img/wxxcx.jpg)
+![image](https://github.com/bilibilifmk/wifi_link_tool/blob/master/img/wxxcx.jpg)
 
 ## 小程页面
-![image](/img/wx1.jpg)
-![image](/img/wx2.jpg)  
+![image](https://github.com/bilibilifmk/wifi_link_tool/blob/master/img/wx1.jpg)
+![image](https://github.com/bilibilifmk/wifi_link_tool/blob/master/img/wx2.jpg)  
 点击通用设备配网 即可弹出配网 如未弹出请检查文件系统是否上传成功！  
 点击设备列表可搜索局域网中可被搜索的设备
 
@@ -48,7 +48,7 @@
 * 打开测试demo 文件—>示例—>wifi_link_tool—>demo
 * 选择串口及波特率
 * 选择合适的flash size
-![image](/img/flash.jpj)  
+![image](https://github.com/bilibilifmk/wifi_link_tool/blob/master/img/flash.jpj)  
 * 点击验证 验证库是否能正常编译
 * 检查文件系统上传工具  工具下会显示 ESP8266 sketch Data Upload 证明安装成功
 * 上传文件系统 工具 —>ESP8266 sketch Data Upload 
