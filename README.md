@@ -2,8 +2,10 @@
 这是一个为esp8266设计的通用配网库   
 该库免费提供 使用请注明出处 允许毕业设计使用本库 
 ## 当前版本v1.0.1 开源协议：GPL3.0
-****
 
+# 操作视频：https://www.bilibili.com/video/BV1Ek4y1r75J/
+
+****
 ![img](https://github.com/bilibilifmk/wifi_link_tool/blob/master/img/index.jpg)
 ****
 ## 普通配网流程 1.链接WiFi 2.自动弹出配网或打开浏览器访问6.6.6.6 3.输入WiFi密码   
@@ -30,7 +32,7 @@
 
 # 普通配网
 ## 扫描二维码直接链接或手动链接 SSID：wifi_link_tool
-### 该二维码支持国内大部分手机相机 （例如使用miui相机）
+### 该二维码支持国内大部分手机相机 （例如使用MIUI系统相机）
 ![image](/img/ptlink.png)  
 链接成功后 会弹出配网web 如为弹出 请检查设备支持性（安卓4.4.4以上大部分支持 ios 11+）和文件系统是否上传成功！
 
