@@ -1,7 +1,7 @@
 /*
 wifi link tool 配网库
 by:发明控 
-版本v1.0.1
+版本v1.0.2
 测试环境 sdk版本：2.5.0 arduino版本1.8.8
 项目地址：https://github.com/bilibilifmk/wifi_link_tool 项目成员：发明控 狗腿 
 */
@@ -29,8 +29,8 @@ const byte DNS_PORT = 53;
 String WiFi_State;   
 #define WiFi_State_Addr 0   
 bool wxscan=true;
-int rstb=0;
-int stateled=2;
+int rstb=D3;
+int stateled=D4;
 IPAddress apIP(6, 6, 6, 6);
 DNSServer dnsServer;
 ESP8266WebServer webServer(80);
@@ -45,7 +45,14 @@ void pant(){
            }
 
 
-
+int link(){
+  int a=0;
+  if(WiFi_State=="1")
+  {
+    a=1;
+  }
+  return a; 
+}
 
 void wwwroot()
 {
