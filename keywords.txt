@@ -5,3 +5,4 @@ rstb	KEYWORD2
 stateled	KEYWORD2
 wxscan	KEYWORD2
 link	KEYWORD2
+torest	KEYWORD2
