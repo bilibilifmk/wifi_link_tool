@@ -45,7 +45,19 @@ void pant(){
            }
 
 
-int link(){
+void torest()
+{
+    WiFi.disconnect(true);
+    delay(100);
+    EEPROM.write(WiFi_State_Addr, 0);
+    EEPROM.commit();
+    delay(300);
+    Serial.print("重置成功！正在重启。");
+    ESP.restart();
+}
+
+int link()
+{
   int a=0;
   if(WiFi_State=="1")
   {
