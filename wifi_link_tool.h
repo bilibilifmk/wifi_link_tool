@@ -1,8 +1,8 @@
 /*
 wifi link tool 配网库
 by:发明控 
-版本v1.0.2
-测试环境 sdk版本：2.5.0 arduino版本1.8.8
+版本v1.0.4
+测试环境 sdk版本：2.7.1 arduino版本1.8.8
 项目地址：https://github.com/bilibilifmk/wifi_link_tool 项目成员：发明控 狗腿 
 */
 
@@ -17,6 +17,7 @@ by:发明控
 #include <FS.h>
 #include <DNSServer.h>
 #include <ESP8266mDNS.h>
+void  ICACHE_RAM_ATTR blink();
 const char *AP_name = "wifi_link_tool"; //修改后即不支持微信配网
 
 
@@ -38,11 +39,12 @@ String responseHTML =" <html><head><title>正在跳转</title></head><body><scri
 
 
 //心跳服务
-void pant(){
+void pant()
+{
    MDNS.update();
    dnsServer.processNextRequest();
    webServer.handleClient();
-           }
+}
 
 
 void torest()
@@ -133,7 +135,8 @@ void wifiConfig()
         delay(50);
     
         WiFi.softAPdisconnect();
-  
+        delay(1000);
+        ESP.restart();
       }
       else
       {
@@ -247,7 +250,7 @@ void blink() {
 
 //加载部分
 void load(){ 
-  attachInterrupt(digitalPinToInterrupt(rstb), blink, FALLING);
+ attachInterrupt(digitalPinToInterrupt(rstb), blink, FALLING);
   Serial.println("");
   EEPROM.begin(4096);
   SPIFFS.begin();
