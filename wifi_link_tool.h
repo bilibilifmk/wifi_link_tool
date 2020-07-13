@@ -1,7 +1,7 @@
 /*
 wifi link tool 配网库
 by:发明控 
-版本v1.0.4
+版本v1.0.5
 测试环境 sdk版本：2.7.1 arduino版本1.8.8
 项目地址：https://github.com/bilibilifmk/wifi_link_tool 项目成员：发明控 狗腿 
 */
@@ -221,6 +221,7 @@ void blink() {
   
   while (millis() - res_time < 3000)
   {
+      ESP.wdtFeed();//喂狗
     if (digitalRead(rstb) != LOW)
     {
       res_state = false;
@@ -230,10 +231,14 @@ void blink() {
   }
   if (res_state == true)
   {
-    WiFi.disconnect(true);
-    delay(100);
-    EEPROM.write(WiFi_State_Addr, 0);
-    EEPROM.commit();
+     EEPROM.write(WiFi_State_Addr, 0);
+     EEPROM.commit();
+    if (WiFi.status() == WL_CONNECTED)
+     {
+     WiFi.disconnect(true);
+     }
+
+   
     delay(300);
     Serial.println("Press the 'rst' button!");
     while (1) {
@@ -262,10 +267,12 @@ void load(){
   {
     Serial.println("找到配置!");
     Serial.print("链接网络");
+      delay(500);
     unsigned millis_time = millis();
     while ((WiFi.status() != WL_CONNECTED) && (millis() - millis_time < 5000))
     {
       delay(250);
+      ESP.wdtFeed();//喂狗
       Serial.print(".");
     }
     if (wxscan){
@@ -288,6 +295,7 @@ void load(){
       Serial.println("链接失败!");
       Serial.println("请尝试重置系统!");
       digitalWrite(stateled, LOW);
+      delay(5000);
     }
   }
   else if (WiFi_State == "0")   
