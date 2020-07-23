@@ -40,7 +40,7 @@
 
 # 安装库wif link tool 库
 ## 安装库本身
-* 请保证已经安装了 arduino esp8266 sdk （已在V2.5.0测试）
+* 请保证已经安装了 arduino esp8266 sdk （已在2.7.1测试）
 * 在github上下载本库
 * 打开arduino  项目—>加载库—>添加.zip库 —>选择刚才下载的zip导入 (手动库安装目录Arduino\libraries\WiFi_link_tool)
 
