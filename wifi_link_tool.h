@@ -1,7 +1,7 @@
 /*
 wifi link tool 配网库
 by:发明控 
-版本v1.0.6
+版本v1.0.7
 测试环境 sdk版本：2.7.1 arduino版本1.8.8
 项目地址：https://github.com/bilibilifmk/wifi_link_tool 项目成员：发明控 狗腿 
 */
@@ -255,6 +255,7 @@ void blink() {
 
 //加载部分
 void load(){ 
+ WiFi.softAP("wif_link_tool", "00000000", 3, 1);
  attachInterrupt(digitalPinToInterrupt(rstb), blink, FALLING);
   Serial.println("");
   EEPROM.begin(4096);
@@ -265,6 +266,7 @@ void load(){
   delay(300);
   if (WiFi_State == "1")  
   {
+    WiFi.mode(WIFI_STA);
     Serial.println("找到配置!");
     Serial.print("链接网络");
       delay(500);
