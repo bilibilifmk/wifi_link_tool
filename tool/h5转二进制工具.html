@@ -1,0 +1,66 @@
+<!Doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>转换工具</title>
+		<meta name="description" content="OConvert Text into Hex-Bytes">
+		<meta name="author" content="Spacehuhn - Stefan Kremser">
+		<meta name="viewport" content="width=device-width, initial-scale=1"> 
+		<script src="jquery-3.2.1.min.js"></script>
+		<style>
+			textarea{
+				width: 96%;
+				height: 350px;
+			}
+		</style>
+	</head>
+	<body>
+
+
+		
+		<div class="container">
+		
+			<div class="row">
+				<div class="col-12">
+					<h1 class="header">将h5文件转换成二进制</h1>
+					<p>
+						如果页面内容包含中文请先将中文转换为UTF-8
+					</p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-6">
+					<textarea id="input"></textarea>
+				</div>
+				<div class="col-6">
+					<textarea id="output" onclick="this.focus();this.select()" readonly="readonly"></textarea>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<button onclick="convert()" class="fullWidth button-primary">转换</button>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<p>长度: <span id="info_len">0</span> Bytes</p>
+				</div>
+			</div>
+					
+		</div>
+		
+		<script>
+			String.prototype.convertToHex = function (delim) {
+				  return this.split("").map(function(c) {
+					  return ("0" + c.charCodeAt(0).toString(16)).slice(-2);
+				  }).join(delim || "");
+			  };
+			  
+			function convert(){
+				var input = $('#input').val().convertToHex(",0x");
+				$('#output').val("0x"+input);
+				$('#info_len').html((input.match(new RegExp(",", "g")) || []).length + 1);
+			}
+		</script>
+	</body>
+</html>
