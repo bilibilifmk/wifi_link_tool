@@ -6,7 +6,7 @@
 请在发行页面下载稳定的发布版本  
 ## 当前版本v1.1.0 开源协议：GPL3.0
 * 如果是旧版库项目安装目前最新版请在项目第一行加入 #define FS_CONFIG 来启动fs模式
-# v1.1.x版本视频：https://www.bilibili.com/video/BV1Ek4y1r75J/
+# v1.1.x版本视频：https://www.bilibili.com/video/BV1Ek4y1r75J?p=2
 # 操作视频：https://www.bilibili.com/video/BV1Ek4y1r75J/
 
 ****
