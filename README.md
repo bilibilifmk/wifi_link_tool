@@ -117,7 +117,7 @@
 将自定义的html 使用tool目录中所提供的工具进行二进制转换， 如果页面中存在中文请先转换成UTF-8编码后转换
 语法： webServer.on("/<请求地址>", <加载函数>);  
 请写在setup函数中 load函数之后  
-加载函数 语法 void <加载函数>() { wifi_link_tool_hex(200, "text/html", <二进制数组>, sizeof(二进制数组));}  
+加载函数 语法 void <加载函数>() { wifi_link_tool_hex(200, "text/html", <二进制数组>, sizeof(二进制数组));} //该函数必须在固化模式下才可使用
 请参考示例中命名规则  
 
 
