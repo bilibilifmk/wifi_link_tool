@@ -1,7 +1,7 @@
 /*
 wifi link tool 配网库
 by:发明控 
-版本v1.
+版本v1.1.1
 测试环境 sdk版本：2.7.1 arduino版本1.8.8
 项目地址：https://github.com/bilibilifmk/wifi_link_tool 
 */
@@ -19,6 +19,8 @@ by:发明控
 #define fs_server false
 #endif
 void  ICACHE_RAM_ATTR blink();
+#define colony_password  "keaino:1"
+//组网密钥 可修改为自己的集群密钥 使用PSK 请保证密钥大于8位小于32位
 const char *AP_name = "wifi_link_tool";
 //修改后即不支持微信配网
 /////////////////////////////////////////////////////不建议修改部分//////////////////////////////////////////////////////////////////
@@ -143,7 +145,7 @@ void wifiConfig() {
 				EEPROM.write(WiFi_State_Addr, 1);
 				EEPROM.commit();
 				delay(50);
-				/* 取消注释后 配网成功后直接重启
+		/* 取消注释后 配网成功后直接重启
         WiFi.softAPdisconnect();
         delay(1000);
         ESP.restart();
@@ -206,6 +208,24 @@ void opera() {
 		WiFi.softAPdisconnect();
 		ESP.restart();
 	}
+		#ifndef OFF_colony
+		if(webServer.arg("opera") == "SSID") webServer.send(200, "text/plain",WiFi.SSID().c_str());
+        if(webServer.arg("opera") == "PSK") webServer.send(200, "text/plain",WiFi.psk().c_str()); 	 
+		#endif
+	
+	
+}
+// http get 请求函数 
+String gethttp_API(String url,int port){
+  String payload="";
+  WiFiClient client;
+  HTTPClient http;
+  if (http.begin(client,url ),port) { 
+    int httpCode = http.GET();
+    payload = http.getString();
+    http.end();
+ }
+return payload;
 }
 void blink() {
 	Serial.println("长按3秒后重置");
@@ -244,7 +264,8 @@ void blink() {
 void load() {
 	Serial.println("");
 	if(fs_server) Serial.println("文件系统模式"); else Serial.println("二进制固化模式");
-	WiFi.softAP("wif_link_tool", "00000000", 3, 1);
+	WiFi.softAP("wif_link_tool",colony_password, 3, 1);
+    //启动加密网络 辅助集群系统
 	attachInterrupt(digitalPinToInterrupt(rstb), blink, FALLING);
 	EEPROM.begin(4096);
 	SPIFFS.begin();
@@ -293,6 +314,60 @@ void load() {
 		Serial.println(url);
 		WiFi.mode(WIFI_AP_STA);
 		WiFi.softAP(AP_name);
+
+		#ifndef OFF_colony
+        Serial.print("扫描网络环境尝试组网");
+        WiFi.begin("wif_link_tool",colony_password);
+		unsigned millis_time = millis();
+		while ((WiFi.status() != WL_CONNECTED) && (millis() - millis_time < 5000)) {
+			delay(250);
+			ESP.wdtFeed();
+			Serial.print("-");
+		}
+		if(WiFi.status()==WL_CONNECTED)
+		{
+        Serial.println("发现集群 正在尝试加入集群");
+        String getssid=gethttp_API("http://6.6.6.6/opera?opera=SSID",80);
+		String getpsk=gethttp_API("http://6.6.6.6/opera?opera=PSK",80);
+		String getsb=gethttp_API("http://6.6.6.6/opera?opera=sb",80);
+		if(getssid!=""&& getpsk!=""){
+        WiFi.disconnect(); 
+		WiFi.begin(getssid, getpsk);
+		millis_time = millis();  
+        	while ((WiFi.status() != WL_CONNECTED) && (millis() - millis_time < 8000)) {
+			delay(250);
+			ESP.wdtFeed();
+			Serial.print(".");
+		}
+		if(WiFi.status()==WL_CONNECTED)
+		{
+         Serial.println("网络信息贡献节点："+getsb);
+		 Serial.println("SSID："+getssid+" password："+getpsk);
+		 WiFi_State = "1";
+		 EEPROM.write(WiFi_State_Addr, 1);
+		 EEPROM.commit();
+		 delay(50);
+         Serial.println("等待重启"); 
+		 delay(500);
+		 ESP.restart();
+		}else
+		{
+    	 Serial.println("组网失败 节点提供信息可能有误");
+		 Serial.println("启动配网模式");
+         WiFi.disconnect();
+		}
+		}else
+		{
+         Serial.println("组网失败 当前网络环境中可能不存在联网的节点");
+		}
+
+		}else
+		{
+        Serial.println("组网失败 当前网络环境中可能不存在当前密钥的集群");
+		Serial.println("启动配网模式");
+        WiFi.disconnect();
+		}
+	 #endif
 	} else {
 		Serial.println("初次启动");
 		EEPROM.write(WiFi_State_Addr, 0);
