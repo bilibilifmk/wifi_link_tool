@@ -1,7 +1,7 @@
 /*
 wifi link tool 配网库
 by:发明控 
-版本v1.1.1
+版本v1.1.2
 测试环境 sdk版本：2.7.1 arduino版本1.8.8
 项目地址：https://github.com/bilibilifmk/wifi_link_tool 
 */
@@ -393,11 +393,14 @@ void load() {
 	webServer.on("/opera", opera);
 	WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
 	dnsServer.start(DNS_PORT, "*", apIP);
+	if (WiFi_State == "0") 
 	webServer.onNotFound([]() {
 		if(fs_server) {
+
 			File file = SPIFFS.open("/config.html", "r");
 			webServer.streamFile(file, "text/html");
 			file.close();
+
 		} else {
 			#ifndef FS_CONFIG
 			   wifi_link_tool_hex(200, "text/html", wifi_config, sizeof(wifi_config));
