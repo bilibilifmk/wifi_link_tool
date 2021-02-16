@@ -1,7 +1,7 @@
 /*
 wifi link tool 配网库
 by:发明控 
-版本v1.1.2
+版本v1.1.3
 测试环境 sdk版本：2.7.1 arduino版本1.8.8
 项目地址：https://github.com/bilibilifmk/wifi_link_tool 
 */
@@ -209,8 +209,15 @@ void opera() {
 		ESP.restart();
 	}
 		#ifndef OFF_colony
-		if(webServer.arg("opera") == "SSID") webServer.send(200, "text/plain",WiFi.SSID().c_str());
-        if(webServer.arg("opera") == "PSK") webServer.send(200, "text/plain",WiFi.psk().c_str()); 	 
+
+		if(webServer.arg("opera") == "SSID")
+		if(webServer.arg("colony_password") ==colony_password)
+		webServer.send(200, "text/plain",WiFi.SSID().c_str());
+    	
+	    if(webServer.arg("opera") == "PSK")
+		if(webServer.arg("colony_password") ==colony_password)
+		 webServer.send(200, "text/plain",WiFi.psk().c_str()); 	 
+		
 		#endif
 	
 	
@@ -276,22 +283,22 @@ void load() {
 	if (WiFi_State == "1") {
 		WiFi.mode(WIFI_STA);
 		Serial.println("找到配置!");
-		Serial.print("链接网络");
+		Serial.print("WiFi_link");
 		delay(500);
 		unsigned millis_time = millis();
-		while ((WiFi.status() != WL_CONNECTED) && (millis() - millis_time < 5000)) {
+		while ((WiFi.status() != WL_CONNECTED) && (millis() - millis_time < 10000)) {
 			delay(250);
 			ESP.wdtFeed();
 			//喂狗
-			Serial.print(".");
+			Serial.print("📡");
 		}
 		if (wxscan) {
 			if (MDNS.begin(Hostname)) {
+				Serial.println("");
 				Serial.println("mDNS以启动");
 			}
 			MDNS.addService("http", "tcp", 80);
 		}
-		Serial.println("");
 		if (WiFi.status() == WL_CONNECTED) {
 			Serial.print("IP 地址: ");
 			Serial.println(WiFi.localIP());
@@ -299,8 +306,8 @@ void load() {
 			Serial.println(Hostname);
 			digitalWrite(stateled, HIGH);
 		} else {
-			Serial.println("链接失败!");
-			Serial.println("请尝试重置系统!");
+			Serial.println("连接失败!");
+			Serial.println("SSID或密钥可能失效!");
 			digitalWrite(stateled, LOW);
 			delay(5000);
 		}
@@ -327,8 +334,8 @@ void load() {
 		if(WiFi.status()==WL_CONNECTED)
 		{
         Serial.println("发现集群 正在尝试加入集群");
-        String getssid=gethttp_API("http://6.6.6.6/opera?opera=SSID",80);
-		String getpsk=gethttp_API("http://6.6.6.6/opera?opera=PSK",80);
+        String getssid=gethttp_API("http://6.6.6.6/opera?opera=SSID&colony_password="+(String)colony_password,80);
+		String getpsk=gethttp_API("http://6.6.6.6/opera?opera=PSK&colony_password="+(String)colony_password,80);
 		String getsb=gethttp_API("http://6.6.6.6/opera?opera=sb",80);
 		if(getssid!=""&& getpsk!=""){
         WiFi.disconnect(); 
@@ -381,7 +388,7 @@ void load() {
 			delay(250);
 		}
 	}
-	Serial.println("启动http服务");
+	Serial.println("正在启动http服务");
   if(WiFi_State=="0") {
     webServer.on("/", wwwroot);
     } else {
@@ -409,4 +416,6 @@ void load() {
 	}
 	);
 	webServer.begin();
+	Serial.println("http服务启动完成");
+	Serial.println("加载用户程序");
 }
