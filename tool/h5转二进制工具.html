@@ -8,10 +8,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="jquery-3.2.1.min.js"></script>
     <style>
+        html, body {
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            min-height: calc(100vh);
+            background: url("https://myhkw.cn/open/img/acg") no-repeat center;
+            background-size: cover;
+        }
+
+        .container {
+            margin: 0 auto;
+            width: 100%;
+            max-width: 1200px;
+            border: 1px solid lightgray;
+            border-radius: 5px;
+            padding: 16px;
+            background: #ffffffcc;
+            box-shadow: 6px 6px 6px #00000022;
+        }
+
+        .row {
+            display: flex;
+        }
+
+        .col-6 {
+            width: 50%;
+        }
+
         textarea {
             width: 96%;
             height: 350px;
         }
+
+        button {
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 20px;
+            text-align: center;
+            font-size: 24px;
+            color: #fff;
+            background: #ff8eb3;
+            padding: 6px 16px;
+        }
+
+
     </style>
 </head>
 <body>
