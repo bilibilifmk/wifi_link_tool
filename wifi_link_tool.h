@@ -1,7 +1,7 @@
 /*
 wifi link tool 配网库
 by:发明控 
-版本v1.1.3
+版本v1.1.4
 测试环境 sdk版本：2.7.1 arduino版本1.8.8
 项目地址：https://github.com/bilibilifmk/wifi_link_tool 
 */
@@ -36,6 +36,25 @@ int stateled=2;
 IPAddress apIP(6, 6, 6, 6);
 DNSServer dnsServer;
 ESP8266WebServer webServer(80);
+//输出信息
+void info(){
+Serial.print("");	
+Serial.println("       ##      ##   ####   ########   ####       ##         ####   ##    ##   ##    ## ");
+Serial.println("       ##  ##  ##    ##    ##          ##        ##          ##    ###   ##   ##   ##  ");
+Serial.println("       ##  ##  ##    ##    ##          ##        ##          ##    ####  ##   ##  ##   ");
+Serial.println("       ##  ##  ##    ##    ######      ##        ##          ##    ## ## ##   #####    ");
+Serial.println("       ##  ##  ##    ##    ##          ##        ##          ##    ##  ####   ##  ##   ");
+Serial.println("       ##  ##  ##    ##    ##          ##        ##          ##    ##   ###   ##   ##  ");
+Serial.println("        ###  ###    ####   ##         ####       ########   ####   ##    ##   ##    ## ");
+Serial.println("                     ########    #######     #######    ##       ");
+Serial.println("                        ##      ##     ##   ##     ##   ##       ");
+Serial.println("                        ##      ##     ##   ##     ##   ##       ");
+Serial.println("                        ##      ##     ##   ##     ##   ##       ");
+Serial.println("                        ##      ##     ##   ##     ##   ##       ");
+Serial.println("                        ##      ##     ##   ##     ##   ##       ");
+Serial.println("                        ##       #######     #######    ######## ");
+}
+
 //心跳服务
 void pant() {
 	MDNS.update();
@@ -269,9 +288,11 @@ void blink() {
 }
 //加载部分
 void load() {
+	//输出信息
+	info();
 	Serial.println("");
 	if(fs_server) Serial.println("文件系统模式"); else Serial.println("二进制固化模式");
-	WiFi.softAP("wif_link_tool",colony_password, 3, 1);
+	WiFi.softAP("wif_link_tool_colony",colony_password, 3, 1);
     //启动加密网络 辅助集群系统
 	attachInterrupt(digitalPinToInterrupt(rstb), blink, FALLING);
 	EEPROM.begin(4096);
@@ -324,7 +345,7 @@ void load() {
 
 		#ifndef OFF_colony
         Serial.print("扫描网络环境尝试组网");
-        WiFi.begin("wif_link_tool",colony_password);
+        WiFi.begin("wif_link_tool_colony",colony_password);
 		unsigned millis_time = millis();
 		while ((WiFi.status() != WL_CONNECTED) && (millis() - millis_time < 5000)) {
 			delay(250);
@@ -419,3 +440,7 @@ void load() {
 	Serial.println("http服务启动完成");
 	Serial.println("加载用户程序");
 }
+
+
+
+
