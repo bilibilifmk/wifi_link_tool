@@ -37,7 +37,13 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-12">
+                <div class="col-6">
+                    <label>
+                        启用HTML压缩：
+                        <input id="enable_minify" type="checkbox" checked>
+                    </label>
+                </div>
+				<div class="col-6">
 					<button onclick="convert()" class="fullWidth button-primary">转换</button>
 				</div>
 			</div>
@@ -50,15 +56,33 @@
 		</div>
 		
 		<script>
+			const Minifier = require('html-minifier-terser');
+
+			const defaultOptions = {
+				collapseWhitespace: true,
+				minifyJS: true,
+				minifyCSS: true,
+			};
+
 			String.prototype.convertToHex = function (delim) {
-				  return this.split("").map(function(c) {
-					  return ("0" + c.charCodeAt(0).toString(16)).slice(-2);
-				  }).join(delim || "");
-			  };
-			  
-			function convert(){
-				var input = $('#input').val().convertToHex(",0x");
-				$('#output').val("0x"+input);
+				return this.split("").map(function (c) {
+					return ("0" + c.charCodeAt(0).toString(16)).slice(-2);
+				}).join(delim || "");
+			};
+
+			function convert() {
+				var input = $('#input').val();
+				var enable_minify = $('#enable_minify').prop('checked');
+				if (input.length === 0) {
+					alert("请输入html内容后再点击转换");
+					return;
+				}
+				if (enable_minify) {
+					input = Minifier.minify(input, defaultOptions);
+				}
+				console.log(input);
+				input = input.convertToHex(",0x");
+				$('#output').val("0x" + input);
 				$('#info_len').html((input.match(new RegExp(",", "g")) || []).length + 1);
 			}
 		</script>
