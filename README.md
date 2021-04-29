@@ -133,9 +133,10 @@
 请写在setup函数中 load函数之后  
 加载函数 语法 void <加载函数>() { wifi_link_tool_hex(200, "text/html", <二进制数组>, sizeof(二进制数组));} //该函数必须在固化模式下才可使用
 请参考示例中命名规则  
-* 发起HTTP_GTE请求  
+* 发起HTTP_GET请求  
 语法：gethttp_API((ULR, 端口);   
-例子：gethttp_API(("http://keai.icu", 80);  
+例子：String r = gethttp_API(("http://keai.icu", 80);  
+发起带参数GET ：String r = gethttp_API(("http://keai.icu?<参数1=值><&参数2 = 值>", 80);  
 返回值 String
 
 # 版本更新说明
