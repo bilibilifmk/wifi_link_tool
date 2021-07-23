@@ -1,7 +1,7 @@
 /*
 wifi link tool 配网库
 by:发明控 
-版本v1.1.4
+版本v1.1.5
 测试环境 sdk版本：2.7.1 arduino版本1.8.8
 项目地址：https://github.com/bilibilifmk/wifi_link_tool 
 */
@@ -36,23 +36,28 @@ int stateled=2;
 IPAddress apIP(6, 6, 6, 6);
 DNSServer dnsServer;
 ESP8266WebServer webServer(80);
+
+void info(void);
+void pant(void);
+void torest(void);
+int link(void);
+void sendBuffer(void);
+void sendHeader(int code, String type, size_t _size);
+void  wifi_link_tool_hex(int code, String type, const char* adr, size_t len);
+
+void wwwroot(void);
+void wifiConfig(void);
+String wifi_type(int typecode);
+void wifiScan(void);
+void opera(void);
+String gethttp_API(String url,int port);
+void load(void);
+
 //输出信息
 void info(){
+Serial.println("");	
+Serial.print("wifi_link_tool_v1.1.5");	
 Serial.print("");	
-Serial.println("       ##      ##   ####   ########   ####       ##         ####   ##    ##   ##    ## ");
-Serial.println("       ##  ##  ##    ##    ##          ##        ##          ##    ###   ##   ##   ##  ");
-Serial.println("       ##  ##  ##    ##    ##          ##        ##          ##    ####  ##   ##  ##   ");
-Serial.println("       ##  ##  ##    ##    ######      ##        ##          ##    ## ## ##   #####    ");
-Serial.println("       ##  ##  ##    ##    ##          ##        ##          ##    ##  ####   ##  ##   ");
-Serial.println("       ##  ##  ##    ##    ##          ##        ##          ##    ##   ###   ##   ##  ");
-Serial.println("        ###  ###    ####   ##         ####       ########   ####   ##    ##   ##    ## ");
-Serial.println("                     ########    #######     #######    ##       ");
-Serial.println("                        ##      ##     ##   ##     ##   ##       ");
-Serial.println("                        ##      ##     ##   ##     ##   ##       ");
-Serial.println("                        ##      ##     ##   ##     ##   ##       ");
-Serial.println("                        ##      ##     ##   ##     ##   ##       ");
-Serial.println("                        ##      ##     ##   ##     ##   ##       ");
-Serial.println("                        ##       #######     #######    ######## ");
 }
 
 //心跳服务
@@ -307,7 +312,7 @@ void load() {
 		Serial.print("WiFi_link");
 		delay(500);
 		unsigned millis_time = millis();
-		while ((WiFi.status() != WL_CONNECTED) && (millis() - millis_time < 10000)) {
+		while ((WiFi.status() != WL_CONNECTED) && (millis() - millis_time < 20000)) {
 			delay(250);
 			ESP.wdtFeed();
 			//喂狗
@@ -326,6 +331,14 @@ void load() {
 			Serial.print("http://");
 			Serial.println(Hostname);
 			digitalWrite(stateled, HIGH);
+			Serial.println("准备测试互联网通信！");
+			String buf= gethttp_API("http://keai.icu/apiwyy/apitext",80);
+			//String buf= gethttp_API("http://baidu.com",80);
+			if(buf!="")
+				Serial.println("网络正常接口返回："+buf);
+			else
+				Serial.println("请检查网络，或接口失效");
+
 		} else {
 			Serial.println("连接失败!");
 			Serial.println("SSID或密钥可能失效!");
