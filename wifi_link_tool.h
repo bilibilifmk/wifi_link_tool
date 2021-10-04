@@ -374,10 +374,17 @@ void load() {
 			Serial.println("准备测试互联网通信！");
 			String buf= gethttp_API("http://keai.icu/apiwyy/apitext",80);
 			//String buf= gethttp_API("http://baidu.com",80);
-			if(buf!="")
+			if(buf!=""){
 				Serial.println("网络正常接口返回："+buf);
-			else
+				Serial.println("向服务器发送一次请求");
+				gethttp_API("http://keai.icu/wifilinktool/up",80);
+				//向服务端发送一次get请求 服务端不会收集任何设备信息 只记录请求次数
+			}
+				
+			else{
 				Serial.println("请检查网络，或接口失效");
+			}
+				
 
 		} else {
 			Serial.println("连接失败!");
