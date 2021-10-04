@@ -1,7 +1,7 @@
 /*
 wifi link tool 配网库
 by:发明控 
-版本v1.1.5
+版本v1.1.6
 测试环境 sdk版本：2.7.1 arduino版本1.8.8
 项目地址：https://github.com/bilibilifmk/wifi_link_tool 
 */
@@ -24,8 +24,9 @@ void  ICACHE_RAM_ATTR blink();
 const char *AP_name = "wifi_link_tool";
 //修改后即不支持微信配网
 /////////////////////////////////////////////////////不建议修改部分//////////////////////////////////////////////////////////////////
+#define  wifilinktoolversion  "1.1.6"
+String Version ="1.0.0";
 String Hostname = "ESP8266";
-String url = Hostname + ".com";
 int Signal_filtering = -200;
 const byte DNS_PORT = 53;
 String WiFi_State;
@@ -56,7 +57,11 @@ void load(void);
 //输出信息
 void info(){
 Serial.println("");	
-Serial.print("wifi_link_tool_v1.1.5");	
+Serial.print("wifi_link_tool Version:");	
+Serial.print(wifilinktoolversion);	
+Serial.println("");	
+Serial.print("Program Version:");	
+Serial.print(Version);	
 Serial.print("");	
 }
 
@@ -141,24 +146,25 @@ void wifiConfig() {
 			String password_str = webServer.arg("password");
 			const char *ssid = ssid_str.c_str();
 			const char *password = password_str.c_str();
+			WiFi.mode(WIFI_AP_STA);
 			Serial.print("SSID: ");
 			Serial.println(ssid);
 			Serial.print("Password: ");
 			Serial.println(password);
 			WiFi.begin(ssid, password);
-			Serial.print("Connenting");
+			Serial.print("尝试连接");
 			unsigned long millis_time = millis();
-			while ((WiFi.status() != WL_CONNECTED) && (millis() - millis_time < 8000)) {
+			while ((WiFi.status() != WL_CONNECTED) && (millis() - millis_time < 80000)) {
 				delay(500);
 				Serial.print(".");
 			}
 			if (WiFi.status() == WL_CONNECTED) {
 				digitalWrite(stateled, HIGH);
 				Serial.println("");
-				Serial.println("Connected successfully!");
-				Serial.print("IP Address: ");
+				Serial.println("链接成功");
+				Serial.print("IP 地址: ");
 				Serial.println(WiFi.localIP());
-				Serial.print("http://");
+				//Serial.print("http://");
 				Serial.println(Hostname);
 				// webServer.send(200, "text/plain", "1");
 				IPAddress ips;
@@ -175,15 +181,15 @@ void wifiConfig() {
         ESP.restart();
         */
 			} else {
-				Serial.println("Connenting failed!");
+				Serial.println("链接失败");
 				webServer.send(200, "text/plain", "0");
 			}
 		} else {
-			Serial.println("Password format error");
+			Serial.println("密码错误");
 			webServer.send(200, "text/plain", "0");
 		}
 	} else {
-		Serial.println("Request parameter error");
+		Serial.println("参数错误");
 		webServer.send(200, "text/plain", "0");
 	}
 }
@@ -232,6 +238,9 @@ void opera() {
 		WiFi.softAPdisconnect();
 		ESP.restart();
 	}
+	if(webServer.arg("opera") == "version"){
+		webServer.send(200, "text/plain", Version);
+	}
 		#ifndef OFF_colony
 
 		if(webServer.arg("opera") == "SSID")
@@ -257,6 +266,37 @@ String gethttp_API(String url,int port){
     http.end();
  }
 return payload;
+}
+// ota升级服务函数 
+void ota(){
+	  webServer.on("/upota", HTTP_POST, []() {
+      webServer.sendHeader("Connection", "close");
+      webServer.send(200, "text/plain", (Update.hasError()) ? "FAIL" : "OK");
+      ESP.restart();
+    }, []() {
+      HTTPUpload& upload =  webServer.upload();
+      if (upload.status == UPLOAD_FILE_START) {
+        Serial.setDebugOutput(true);
+        WiFiUDP::stopAll();
+        Serial.printf("升级文件: %s\n", upload.filename.c_str());
+        uint32_t maxSketchSpace = (ESP.getFreeSketchSpace() - 0x1000) & 0xFFFFF000;
+        if (!Update.begin(maxSketchSpace)) {
+          Update.printError(Serial);
+        }
+      } else if (upload.status == UPLOAD_FILE_WRITE) {
+        if (Update.write(upload.buf, upload.currentSize) != upload.currentSize) {
+          Update.printError(Serial);
+        }
+      } else if (upload.status == UPLOAD_FILE_END) {
+        if (Update.end(true)) { 
+          Serial.printf("更新成功: %u\n等待重启...\n", upload.totalSize);
+        } else {
+          Update.printError(Serial);
+        }
+        Serial.setDebugOutput(false);
+      }
+      yield();
+    });
 }
 void blink() {
 	Serial.println("长按3秒后重置");
@@ -312,7 +352,7 @@ void load() {
 		Serial.print("WiFi_link");
 		delay(500);
 		unsigned millis_time = millis();
-		while ((WiFi.status() != WL_CONNECTED) && (millis() - millis_time < 20000)) {
+		while ((WiFi.status() != WL_CONNECTED) && (millis() - millis_time < 80000)) {
 			delay(250);
 			ESP.wdtFeed();
 			//喂狗
@@ -351,8 +391,6 @@ void load() {
 		Serial.println("");
 		Serial.print("启动WiFi配置 \n建立AP 名称 -->  ");
 		Serial.println(AP_name);
-		Serial.print("http://");
-		Serial.println(url);
 		WiFi.mode(WIFI_AP_STA);
 		WiFi.softAP(AP_name);
 
@@ -360,7 +398,7 @@ void load() {
         Serial.print("扫描网络环境尝试组网");
         WiFi.begin("wif_link_tool_colony",colony_password);
 		unsigned millis_time = millis();
-		while ((WiFi.status() != WL_CONNECTED) && (millis() - millis_time < 5000)) {
+		while ((WiFi.status() != WL_CONNECTED) && (millis() - millis_time < 10000)) {
 			delay(250);
 			ESP.wdtFeed();
 			Serial.print("-");
