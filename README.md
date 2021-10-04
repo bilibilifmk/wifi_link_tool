@@ -4,7 +4,7 @@
 这是一个为esp8266设计的通用配网及集群库   
 该库免费提供 使用请注明出处 允许毕业设计使用本库   
 请在发行页面下载稳定的发布版本  
-## 当前版本v1.1.5 开源协议：GPL3.0
+## 当前版本v1.1.6 开源协议：GPL3.0
 * 如果是旧版库项目安装目前最新版请在项目第一行加入 #define FS_CONFIG 来启动fs模式
 # v1.1.x版本视频：https://www.bilibili.com/video/BV1Ek4y1r75J?p=2
 # 操作视频：https://www.bilibili.com/video/BV1Ek4y1r75J/
@@ -138,7 +138,11 @@
 例子：String r = gethttp_API(("http://keai.icu", 80);  
 发起带参数GET ：String r = gethttp_API(("http://keai.icu?<参数1=值><&参数2 = 值>", 80);  
 返回值 String
-
+* 获得当前程序版本号   
+该api以集成进库中  
+作用 获得设备设备程序版本号 方便进行ota升级  
+请求方法 http get 返回类型 String  
+地址 http://x.x.x.x/opera?opera=version
 # 版本更新说明
 ****
 * v1.0.1：基础库发布！
@@ -154,9 +158,9 @@
 * v1.1.3：修复了集群模式下wifi密码可能泄露的风险，请保管好您项目中集群密钥！ 修复了一些文字错误，修改输出逻辑。
 * v1.1.4：修复了集群模式下勿连接到未配网的设备上，导致集群配网失败；添加了启动输出信息。
 * v1.1.5：增加了对网络状态的测试，默认返回网易云热评（ https://keai.icu/apiwyy ）  ，删除启动logo换成输出版本。
+* v1.1.6：优化连接网络逻辑，增加OTA功能 详情请查看ota_demo 加入程序版本号返回 ，输出信息改为 wifilinktoos版本号 和程序版本号。
 ****
 
 
 
-## 测试环境  sdk版本：2.7.1 arduino版本1.8.8
-
+## 测试环境  sdk版本：2.7.1 arduino版本1.8.16
