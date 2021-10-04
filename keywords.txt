@@ -7,3 +7,6 @@ wxscan	KEYWORD2
 link	KEYWORD2
 wifi_link_tool_hex	KEYWORD2
 gethttp_API	KEYWORD2
+Version	KEYWORD2
+ota	KEYWORD2
+
