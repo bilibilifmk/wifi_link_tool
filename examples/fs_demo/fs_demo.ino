@@ -1,6 +1,6 @@
 /*
 项目地址：https://github.com/bilibilifmk/wifi_link_tool  by:发明控 
-测试环境sdk版本：2.5.0 arduino版本1.8.8
+测试环境sdk版本：2.7.1 arduino版本1.8.8
 默认重置 D3（gpio 0） 默认状态led gpio2  
 D3---------/ --------gnd
 
