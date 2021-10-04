@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ 
+    <meta http-equiv='Content-type' content='text/html; charset=utf-8'> 
+    <title>OTA示例程序</title> 
+    
+</head>
+<body>
+    <div style="text-align: center; padding-top: 50px">
+      
+      <h2>OTA升级示例程序</h2>
+      <p></p>
+
+      <h3 id="sj">正在获取</h3>
+
+     
+       
+        <div style="text-align: left;display: inline-block;width: 300px; height: 20px; border: 1px solid #f844a7ea; border-radius: 2px;position: relative">
+            <div id="progress_bar" style="display: inline-block; width: 0px; height: 20px;background-color: #b56486de"></div>
+            <div style="text-align: center;width: 300px;position: absolute; top: 0; font-size:16px; color: #413F43">
+                <div id="loading">
+                    上传进度0%
+                </div>
+            </div>
+            
+        </div>
+        <br>
+        <br>
+        <input type="file" id="avatar" />
+        <button onclick="to_upload_file()">OTA升级</button>
+
+    </div>
+        <script>
+
+window.onload=function(){
+    hqsj();
+
+}
+
+function hqsj(){
+                var xmlhttp;
+                    if (window.XMLHttpRequest) {
+                        xmlhttp = new XMLHttpRequest();
+                    }
+                    xmlhttp.onreadystatechange = function () {
+                        if ( xmlhttp.status == 200){
+                           
+                            document.getElementById("sj").innerHTML = "当前程序版本："+xmlhttp.responseText
+                         
+                           
+                        }
+                    }
+                
+                    xmlhttp.open("GET", "/opera?opera=version");
+                    xmlhttp.send();
+                }
+
+
+            // 处理上传进度
+            function progressFunction(e){
+                var progress_bar = document.getElementById("progress_bar");
+                var loading_dom = document.getElementById("loading");
+                var loading = Math.round(e.loaded / e.total * 100);
+                console.log("loading::", loading);
+
+                if(loading === 100){
+                    loading_dom.innerHTML = "上传成功 等待升级完成";
+                    location.reload();
+                }else{
+                    loading_dom.innerHTML = "上传进度"+loading+"%"
+                }
+                
+                progress_bar.style.width = String(loading * 3) + "px";
+            }
+            // 上传成功
+            function uploadComplete(e) {
+                console.log("上传成功！", e);
+                alert("升级成功，设备会自动重启");
+                location.reload();
+
+            }
+            // 上传失败
+            function uploadFailed(e) {
+                console.log("升级失败", e);
+    
+            }
+    
+            function to_upload_file(){
+                var file_obj = document.getElementById("avatar").files[0]
+                if(file_obj){
+                    var url = "/upota";
+                    var form = new FormData();
+                    form.append("file", file_obj);
+                    var xhr = new XMLHttpRequest();
+                    xhr.onload = uploadComplete; 
+                    xhr.onerror =  uploadFailed;
+                    xhr.upload.onprogress = progressFunction; 
+                    xhr.open("POST", url, true);
+                    xhr.send(form);
+                }else{
+                    alert("文件错误")
+                }
+            }
+        </script>
+</body>
+</html>
