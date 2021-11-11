@@ -1,8 +1,8 @@
 /*
 wifi link tool 配网库
 by:发明控 
-版本v1.1.6
-测试环境 sdk版本：2.7.1 arduino版本1.8.8
+版本v1.1.7
+测试环境 sdk版本：3.0.0 arduino版本1.8.16
 项目地址：https://github.com/bilibilifmk/wifi_link_tool 
 */
 #include <Arduino.h>
@@ -24,13 +24,13 @@ void  ICACHE_RAM_ATTR blink();
 const char *AP_name = "wifi_link_tool";
 //修改后即不支持微信配网
 /////////////////////////////////////////////////////不建议修改部分//////////////////////////////////////////////////////////////////
-#define  wifilinktoolversion  "1.1.6"
+#define  wifilinktoolversion  "1.1.7"
 String Version ="1.0.0";
 String Hostname = "ESP8266";
 int Signal_filtering = -200;
 const byte DNS_PORT = 53;
-String WiFi_State;
-#define WiFi_State_Addr 0   
+int WiFi_State;
+#define WiFi_State_Addr  0
 bool wxscan=true;
 int rstb=0;
 int stateled=2;
@@ -82,7 +82,7 @@ void torest() {
 }
 int link() {
 	int a=0;
-	if(WiFi_State=="1") {
+	if(WiFi_State==1) {
 		a=1;
 	}
 	return a;
@@ -116,21 +116,21 @@ void  wifi_link_tool_hex(int code, String type, const char* adr, size_t len) {
 }
 void wwwroot() {
 	if(fs_server) {
-		if (WiFi_State == "1") {
+		if (WiFi_State == 1) {
 			File file = SPIFFS.open("/index.html", "r");
 			webServer.streamFile(file, "text/html");
 			file.close();
-		} else if (WiFi_State == "0") {
+		} else if (WiFi_State == 0) {
 			File file = SPIFFS.open("/config.html", "r");
 			webServer.streamFile(file, "text/html");
 			file.close();
 		}
 	} else {
-		if (WiFi_State == "1") {
+		if (WiFi_State == 1) {
 			File file = SPIFFS.open("/index.html", "r");
 			webServer.streamFile(file, "text/html");
 			file.close();
-		} else if (WiFi_State == "0") {
+		} else if (WiFi_State == 0) {
 			#ifndef FS_CONFIG
 			   wifi_link_tool_hex(200, "text/html", wifi_config, sizeof(wifi_config));
 			#endif
@@ -138,7 +138,7 @@ void wwwroot() {
 	}
 }
 void wifiConfig() {
-	if (webServer.hasArg("ssid") && webServer.hasArg("password") && WiFi_State == "0") {
+	if (webServer.hasArg("ssid") && webServer.hasArg("password") && WiFi_State == 0) {
 		int ssid_len = webServer.arg("ssid").length();
 		int password_len = webServer.arg("password").length();
 		if ((ssid_len > 0) && (ssid_len < 33) && (password_len > 7) && (password_len < 65)) {
@@ -147,6 +147,7 @@ void wifiConfig() {
 			const char *ssid = ssid_str.c_str();
 			const char *password = password_str.c_str();
 			WiFi.mode(WIFI_AP_STA);
+			WiFi.disconnect(true);
 			Serial.print("SSID: ");
 			Serial.println(ssid);
 			Serial.print("Password: ");
@@ -161,7 +162,7 @@ void wifiConfig() {
 			if (WiFi.status() == WL_CONNECTED) {
 				digitalWrite(stateled, HIGH);
 				Serial.println("");
-				Serial.println("链接成功");
+				Serial.println("连接成功->"+WiFi.SSID());
 				Serial.print("IP 地址: ");
 				Serial.println(WiFi.localIP());
 				//Serial.print("http://");
@@ -171,7 +172,7 @@ void wifiConfig() {
 				ips = WiFi.localIP();
 				webServer.send(200, "text/plain", String(ips[0])+"."+String(ips[1])+"."+String(ips[2])+"."+String(ips[3]));
 				delay(300);
-				WiFi_State = "1";
+				WiFi_State = 1;
 				EEPROM.write(WiFi_State_Addr, 1);
 				EEPROM.commit();
 				delay(50);
@@ -201,6 +202,7 @@ String wifi_type(int typecode) {
 	if (typecode == ENC_TYPE_AUTO) return "WPA*";
 }
 void wifiScan() {
+	WiFi.disconnect();
 	String req_json = "";
 	Serial.println("Scan WiFi");
 	int n = WiFi.scanNetworks();
@@ -339,6 +341,7 @@ void load() {
 	if(fs_server) Serial.println("文件系统模式"); else Serial.println("二进制固化模式");
 	WiFi.softAP("wif_link_tool_colony",colony_password, 3, 1);
     //启动加密网络 辅助集群系统
+	WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
 	attachInterrupt(digitalPinToInterrupt(rstb), blink, FALLING);
 	EEPROM.begin(4096);
 	SPIFFS.begin();
@@ -346,10 +349,11 @@ void load() {
 	pinMode(stateled, OUTPUT);
 	WiFi_State = EEPROM.read(WiFi_State_Addr);
 	delay(300);
-	if (WiFi_State == "1") {
+	if (WiFi_State == 1) {
 		WiFi.mode(WIFI_STA);
+		WiFi.begin();
 		Serial.println("找到配置!");
-		Serial.print("WiFi_link");
+		Serial.print("WiFi_link to " + WiFi.SSID());
 		delay(500);
 		unsigned millis_time = millis();
 		while ((WiFi.status() != WL_CONNECTED) && (millis() - millis_time < 80000)) {
@@ -392,7 +396,7 @@ void load() {
 			digitalWrite(stateled, LOW);
 			delay(5000);
 		}
-	} else if (WiFi_State == "0") {
+	} else if (WiFi_State == 0) {
 		digitalWrite(stateled, LOW);
 		WiFi.disconnect(true);
 		Serial.println("");
@@ -429,7 +433,7 @@ void load() {
 		{
          Serial.println("网络信息贡献节点："+getsb);
 		 Serial.println("SSID："+getssid+" password："+getpsk);
-		 WiFi_State = "1";
+		 WiFi_State = 1;
 		 EEPROM.write(WiFi_State_Addr, 1);
 		 EEPROM.commit();
 		 delay(50);
@@ -468,7 +472,7 @@ void load() {
 		}
 	}
 	Serial.println("正在启动http服务");
-  if(WiFi_State=="0") {
+  if(WiFi_State == 0) {
     webServer.on("/", wwwroot);
     } else {
       if(fs_server)
@@ -477,9 +481,9 @@ void load() {
 	webServer.on("/wificonfig", wifiConfig);
 	webServer.on("/wifiscan", wifiScan);
 	webServer.on("/opera", opera);
-	WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
+	//WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
 	dnsServer.start(DNS_PORT, "*", apIP);
-	if (WiFi_State == "0") 
+	if (WiFi_State == 0) 
 	webServer.onNotFound([]() {
 		if(fs_server) {
 
