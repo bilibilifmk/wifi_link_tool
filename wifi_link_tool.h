@@ -1,7 +1,7 @@
 /*
 wifi link tool 配网库
 by:发明控 
-版本v1.1.7
+版本v1.1.8
 测试环境 sdk版本：3.0.0 arduino版本1.8.16
 项目地址：https://github.com/bilibilifmk/wifi_link_tool 
 */
@@ -24,7 +24,7 @@ void  ICACHE_RAM_ATTR blink();
 const char *AP_name = "wifi_link_tool";
 //修改后即不支持微信配网
 /////////////////////////////////////////////////////不建议修改部分//////////////////////////////////////////////////////////////////
-#define  wifilinktoolversion  "1.1.7"
+#define  wifilinktoolversion  "1.1.8"
 String Version ="1.0.0";
 String Hostname = "ESP8266";
 int Signal_filtering = -200;
@@ -258,16 +258,20 @@ void opera() {
 	
 }
 // http get 请求函数 
-String gethttp_API(String url,int port){
+String gethttp_API(String url){
   String payload="";
   WiFiClient client;
   HTTPClient http;
-  if (http.begin(client,url ),port) { 
+  if (http.begin(client,url)) { 
     int httpCode = http.GET();
     payload = http.getString();
     http.end();
  }
 return payload;
+}
+//兼容以前httpget 
+String gethttp_API(String url,int port){
+return gethttp_API(url);
 }
 // ota升级服务函数 
 void ota(){
