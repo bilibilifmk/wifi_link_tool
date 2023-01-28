@@ -5,7 +5,7 @@ https://keai.icu/wifilinktool
 这是一个为esp8266设计的通用配网及集群库   
 该库免费提供 使用请注明出处 允许毕业设计使用本库   
 请在发行页面下载稳定的发布版本  
-## 当前版本v1.1.8 开源协议：GPL3.0
+## 当前版本v1.1.9 开源协议：GPL3.0
 * 如果是旧版库项目安装目前最新版请在项目第一行加入 #define FS_CONFIG 来启动fs模式
 # v1.1.x版本视频：https://www.bilibili.com/video/BV1Ek4y1r75J?p=2
 # 操作视频：https://www.bilibili.com/video/BV1Ek4y1r75J/
@@ -164,6 +164,7 @@ https://keai.icu/wifilinktool
 * v1.1.6：优化连接网络逻辑，增加OTA功能 详情请查看ota_demo 加入程序版本号返回（增加对版本的输出） ，输出信息改为 wifilinktoos版本号 和程序版本号 增加向服务器请求（服务端不会收集任何设备信息 只记录请求次数不放心可以注释gethttp_API("http://keai.icu/wifilinktool/up",80);）。
 * v1.1.7：1.修复了一个历史遗留问题，导致的高版本sdk循环重复“第一次启动请重置” 2.修复了连接失败 第二次连接永远不会返回 3.修改了一些很矛盾的逻辑理论上能优化性能 
 * v1.1.8：修改get请求参数 去除端口号 兼容以前的写法 
+* v1.1.9：修复链接开发Wi-Fi 密码错误问题  
 ****
 
 
