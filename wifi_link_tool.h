@@ -1,7 +1,7 @@
 /*
 wifi link tool 配网库
 by:发明控 
-版本v1.1.8
+版本v1.1.9
 测试环境 sdk版本：3.0.0 arduino版本1.8.16
 项目地址：https://github.com/bilibilifmk/wifi_link_tool 
 */
@@ -141,7 +141,8 @@ void wifiConfig() {
 	if (webServer.hasArg("ssid") && webServer.hasArg("password") && WiFi_State == 0) {
 		int ssid_len = webServer.arg("ssid").length();
 		int password_len = webServer.arg("password").length();
-		if ((ssid_len > 0) && (ssid_len < 33) && (password_len > 7) && (password_len < 65)) {
+		//if ((ssid_len > 0) && (ssid_len < 33) && (password_len > 7) && (password_len < 65)) {
+		if ((ssid_len > 0) && (ssid_len < 33) && (password_len < 65)) {
 			String ssid_str = webServer.arg("ssid");
 			String password_str = webServer.arg("password");
 			const char *ssid = ssid_str.c_str();
